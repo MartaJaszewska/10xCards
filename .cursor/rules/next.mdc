@@ -1,0 +1,30 @@
+---
+description: 
+globs: app/**/*.tsx,app/**/*.ts,src/app/**/*.tsx,src/app/**/*.ts
+alwaysApply: false
+---
+### Guidelines for Next.js (App Router)
+
+- Use the App Router (`src/app`) with server components by default; add `"use client"` only when interactivity is required
+- Use nested layouts and route groups for structuring the app instead of separate layout frameworks
+- Implement API routes with Route Handlers in `app/api/**/route.ts`
+- Use `GET`, `POST`, etc. named exports for HTTP handlers in Route Handlers
+- Use Zod for input validation in Route Handlers and server actions
+- Extract shared business logic into services in `src/lib/services`
+- Implement `middleware.ts` for request/response modification (auth, logging, feature flags, etc.)
+- Use the built‑in Next.js Image component for image optimization
+- Leverage server components and streaming for hybrid rendering and performance
+- Use `cookies()` and `headers()` from `next/headers` for server-side cookie and header management
+- Use `process.env.*` for environment variables (and keep secrets server-only)
+
+- Use App Router and Server Components for improved performance and SEO
+- Implement route handlers for API endpoints instead of the pages/api directory
+- Use server actions for form handling and data mutations from Server Components
+- Leverage Next.js Image component with proper sizing for core web vitals optimization
+- Implement the Metadata API for dynamic SEO optimization
+- Use React Server Components for data-fetching and rendering heavy or shared data to reduce client-side JavaScript
+- Implement Streaming and Suspense for improved loading states
+- Use the new Link component without requiring a child <a> tag
+- Leverage parallel routes for complex layouts and parallel data fetching
+- Implement intercepting routes for modal patterns and nested UIs
+
