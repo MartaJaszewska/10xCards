@@ -148,7 +148,7 @@ Przegląd kandydatów:
 - dla każdej karty dostępne są trzy akcje:
   - Accept:
     - zapisuje fiszkę do bazy w aktualnej formie,
-    - origin = "ai",
+    - origin = "ai-full",
     - przypisuje ją do aktualnie zalogowanego użytkownika,
   - Edit + Accept:
     - umożliwia edycję front/back kandydackiej fiszki (z walidacją jak przy ręcznym tworzeniu),
@@ -172,7 +172,7 @@ Obsługa błędów:
 
 MVP wymagania dot. logów:
 
-- każdorazowe wywołanie generowania AI tworzy rekord w tabeli logów generowania,
+- każdorazowe wywołanie generowania AI tworzy rekord w tabeli `generations` (bez przechowywania pełnego inputu – tylko hash, długość i statystyki),
 
 Kwestie otwarte (do doprecyzowania później, nie blokują MVP):
 
@@ -337,7 +337,7 @@ US-011
 - Opis: Jako użytkownik przeglądający kandydatów chcę jednym kliknięciem zaakceptować daną fiszkę tak, aby trafiła do mojej listy zapisanych fiszek.
 - Kryteria akceptacji:
   - AC1: Przy kandydacie dostępny jest przycisk "Akceptuj" (lub równoważny).
-  - AC2: Po kliknięciu karta jest zapisywana w bazie jako fiszka z origin = "ai" i powiązana z user_id.
+  - AC2: Po kliknięciu karta jest zapisywana w bazie jako fiszka z origin = "ai-full" i powiązana z user_id.
   - AC3: Po zakończeniu przeglądu kandydatów zaakceptowane karty są widoczne na liście fiszek, na górze (najnowsze).
 
 US-012
@@ -347,7 +347,7 @@ US-012
 - Kryteria akceptacji:
   - AC1: Przy kandydacie dostępna jest akcja "Edytuj" lub "Edytuj i zaakceptuj".
   - AC2: Edycja odbywa się w formularzu z walidacją front/back (niepuste, limity znaków 200/500).
-  - AC3: Po zapisaniu edycji fiszka jest tworzona w bazie z origin = "ai".
+  - AC3: Po zapisaniu edycji fiszka jest tworzona w bazie z origin = "ai-edited".
   - AC4: Odrzucenie edycji (Anuluj) nie zapisuje fiszki i wraca do widoku kandydata.
 
 US-013
@@ -427,9 +427,9 @@ US-020
 - Tytuł: Logowanie zdarzenia generowania
 - Opis: Jako właściciel produktu chcę, aby każde wywołanie generowania AI było logowane, aby móc analizować użycie i jakość generowania.
 - Kryteria akceptacji:
-  - AC1: Każde rozpoczęte wywołanie generowania AI tworzy rekord w tabeli logów generowania z user_id i długością inputu.
-  - AC2: Po zakończeniu przeglądu kandydatów log jest uzupełniany o liczbę wygenerowanych kandydatów i zaakceptowanych fiszek.
-  - AC3: W przypadku błędu generowania log zawiera status błędu.
+  - AC1: Każde rozpoczęte wywołanie generowania AI tworzy rekord w tabeli `generations` z user_id, długością inputu (source_text_length), hashem tekstu (source_text_hash), nazwą modelu i znacznikiem czasu.
+  - AC2: Po zakończeniu przeglądu kandydatów rekord w `generations` jest uzupełniany o generated_count, accepted_unedited_count, accepted_edited_count oraz czas generowania (generation_duration).
+  - AC3: W przypadku błędu generowania tworzony jest rekord w tabeli `generation_error_logs` z user_id, długością inputu, hashem tekstu, nazwą modelu, error_code i error_message.
   - AC4: Logi można później wykorzystać do wyliczenia wskaźników (np. acceptance rate).
 
 ### 6. Metryki sukcesu
@@ -437,13 +437,13 @@ US-020
 Metryki produktowe (z perspektywy wartości dla użytkownika):
 
 - co najmniej 75 procent fiszek wygenerowanych przez AI jest akceptowanych przez użytkowników (średnio, w dłuższym okresie),
-- co najmniej 75 procent nowo tworzonych fiszek pochodzi z generowania AI (origin = "ai") w stosunku do manualnych (origin = "manual").
+- co najmniej 75 procent nowo tworzonych fiszek pochodzi z generowania AI (origin = "ai-full" lub "ai-edited") w stosunku do manualnych (origin = "manual").
 
 Metryki operacyjne (możliwe do wyliczenia z logów i modeli danych):
 
 - liczba wywołań generowania AI per użytkownik i globalnie,
 - liczba kandydatów wygenerowanych per wywołanie (generated_count),
-- liczba zaakceptowanych fiszek per wywołanie (accepted_count),
+- liczba zaakceptowanych fiszek per wywołanie (accepted_total = accepted_unedited_count + accepted_edited_count),
 - wskaźnik acceptance rate:
   - accepted_count / generated_count na poziomie:
     - pojedynczego wywołania,

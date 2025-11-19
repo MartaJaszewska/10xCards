@@ -58,8 +58,7 @@ The target user is anyone learning from text (notes, course materials, articles)
   - Acts as Backend-as-a-Service.
   - Provides Postgres database for flashcards, users, and AI generation logs.
   - Provides email/password authentication with row-level security to ensure users only see their own data.
-
-(Concrete schema and migrations are not yet documented in this repository; they will be added alongside the implementation.)
+  - Database schema and RLS policies are defined via SQL migrations under `supabase/migrations` (core tables: `flashcards`, `generations`, `generation_error_logs`).
 
 ### AI layer
 
@@ -87,13 +86,14 @@ The exact model choice and prompts are intentionally left flexible so they can b
 
 - **Node.js**: v20+ recommended (modern Next.js & React versions).
 - **npm**: comes with Node; this repo uses `npm` (see `package-lock.json`).
-- **Supabase project** (planned):
+- **Supabase CLI + project**:
   - PostgreSQL database with auth enabled.
   - RLS configured so users can access only their own rows.
-- **OpenRouter API key** (planned):
+  - Local schema managed via the SQL migrations in `supabase/migrations` (e.g. `npx supabase db reset`).
+- **OpenRouter API key**:
   - For contacting the AI models used in card generation.
 
-> The exact environment variables and database schema are not yet codified in this repo. The section below uses conventional names that may be adjusted during implementation.
+> The exact environment variables are still being refined. The section below uses conventional names that may be adjusted during implementation.
 
 ### 1. Clone the repository
 
