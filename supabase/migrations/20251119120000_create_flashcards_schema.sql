@@ -297,7 +297,9 @@ alter table public.flashcards force row level security;
 --   - data access is strictly scoped to "user_id = auth.uid()"
 
 -- select policies
-create policy if not exists generations_select_authenticated
+drop policy if exists generations_select_authenticated on public.generations;
+
+create policy generations_select_authenticated
 on public.generations
 as permissive
 for select
@@ -305,7 +307,9 @@ to authenticated
 using (user_id = auth.uid());
 
 -- insert policies
-create policy if not exists generations_insert_authenticated
+drop policy if exists generations_insert_authenticated on public.generations;
+
+create policy generations_insert_authenticated
 on public.generations
 as permissive
 for insert
@@ -313,7 +317,9 @@ to authenticated
 with check (user_id = auth.uid());
 
 -- update policies
-create policy if not exists generations_update_authenticated
+drop policy if exists generations_update_authenticated on public.generations;
+
+create policy generations_update_authenticated
 on public.generations
 as permissive
 for update
@@ -322,7 +328,9 @@ using (user_id = auth.uid())
 with check (user_id = auth.uid());
 
 -- delete policies
-create policy if not exists generations_delete_authenticated
+drop policy if exists generations_delete_authenticated on public.generations;
+
+create policy generations_delete_authenticated
 on public.generations
 as permissive
 for delete
@@ -338,7 +346,9 @@ using (user_id = auth.uid());
 -- this keeps diagnostic information strictly per-user and avoids cross-tenant leaks.
 
 -- select policies
-create policy if not exists generation_error_logs_select_authenticated
+drop policy if exists generation_error_logs_select_authenticated on public.generation_error_logs;
+
+create policy generation_error_logs_select_authenticated
 on public.generation_error_logs
 as permissive
 for select
@@ -346,7 +356,9 @@ to authenticated
 using (user_id = auth.uid());
 
 -- insert policies
-create policy if not exists generation_error_logs_insert_authenticated
+drop policy if exists generation_error_logs_insert_authenticated on public.generation_error_logs;
+
+create policy generation_error_logs_insert_authenticated
 on public.generation_error_logs
 as permissive
 for insert
@@ -354,7 +366,9 @@ to authenticated
 with check (user_id = auth.uid());
 
 -- update policies
-create policy if not exists generation_error_logs_update_authenticated
+drop policy if exists generation_error_logs_update_authenticated on public.generation_error_logs;
+
+create policy generation_error_logs_update_authenticated
 on public.generation_error_logs
 as permissive
 for update
@@ -363,7 +377,9 @@ using (user_id = auth.uid())
 with check (user_id = auth.uid());
 
 -- delete policies
-create policy if not exists generation_error_logs_delete_authenticated
+drop policy if exists generation_error_logs_delete_authenticated on public.generation_error_logs;
+
+create policy generation_error_logs_delete_authenticated
 on public.generation_error_logs
 as permissive
 for delete
@@ -379,7 +395,9 @@ using (user_id = auth.uid());
 -- access is strictly per-user; there is no cross-user sharing in the mvp.
 
 -- select policies
-create policy if not exists flashcards_select_authenticated
+drop policy if exists flashcards_select_authenticated on public.flashcards;
+
+create policy flashcards_select_authenticated
 on public.flashcards
 as permissive
 for select
@@ -387,7 +405,9 @@ to authenticated
 using (user_id = auth.uid());
 
 -- insert policies
-create policy if not exists flashcards_insert_authenticated
+drop policy if exists flashcards_insert_authenticated on public.flashcards;
+
+create policy flashcards_insert_authenticated
 on public.flashcards
 as permissive
 for insert
@@ -395,7 +415,9 @@ to authenticated
 with check (user_id = auth.uid());
 
 -- update policies
-create policy if not exists flashcards_update_authenticated
+drop policy if exists flashcards_update_authenticated on public.flashcards;
+
+create policy flashcards_update_authenticated
 on public.flashcards
 as permissive
 for update
@@ -404,7 +426,9 @@ using (user_id = auth.uid())
 with check (user_id = auth.uid());
 
 -- delete policies
-create policy if not exists flashcards_delete_authenticated
+drop policy if exists flashcards_delete_authenticated on public.flashcards;
+
+create policy flashcards_delete_authenticated
 on public.flashcards
 as permissive
 for delete
